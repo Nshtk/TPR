@@ -6,12 +6,13 @@
 \usepackage[english, russian]{babel}
 \usepackage[T1]{tipa}
 \usepackage{tipx}
+\usepackage{indentfirst}
 
 \newcommand{\mathnrleg}{\textnormal{\textnrleg}}
 
-\title{tprlab1}
-\author{author}
-\date{March 2023}
+\title{Задание №1}
+\author{М8О-411Б, Солдатов Вячеслав}
+\date{Март 2023}
 
 \begin{document}
 \maketitle
@@ -22,15 +23,16 @@
 
 \section{Известно}
 {\Large
-$\hat{L}_t = \sum_{i=1}^N l(x,y) = \sum_{i=1}^N |\hat{p}_t - y_t|$ - потери алгоритма \\\\
+\noindent $\hat{L}_t = \sum_{i=1}^N l(x,y) = \sum_{i=1}^N |\hat{p}_t - y_t|$ - потери алгоритма \\\\
 $L_{i,t} = \sum_{i=1}^N l(x_i,y) = \sum_{i=1}^N |\hat{f}_{i,t} - y_t|$ - потери эксперта \\\\
 $\hat{p}_t = \frac{\sum_{i=1}^N w_{i,t-1} \cdot f_{i,t}}{\sum_{i=1}^N w_{i,t-1}} = \frac{\sum_{i=1}^{N}\, e^{-nL_{i,t-1}}f_{i,t}}{\sum_{i=1}^{N}\, e^{-nL_{i,t-1}}}$ - предсказание \\\\
 $W_t = \sum_{i=1}^N w_{i,t} = \sum_{i=1}^{T}\, e^{-nL_{i,t}}$ - веса экспертов \\\\
-$ln\frac{W_t}{W_{t-1}} = ln\sum_{i=1}^N p_k(t-1)e^{-\mathnrleg|f_{i,t}-y_t|} \\\\$
+$ln\frac{W_t}{W_{t-1}} = ln\sum_{i=1}^N p_i(t-1)e^{-\mathnrleg|f_{i,t}-y_t|} \\\\$
 $ln\frac{W_t}{W_{0}} = ln(\sum_{i=1}^N e^{-nL_{i,t}})-lnN$
 }
 
-\section{Решение}
+\section{Решение №1}
+
 Общие потери лучшего эксперта обозначим как:
 
 $$i^\star = \arg\min_{i=1}^N L_{i,T}$$
@@ -45,13 +47,42 @@ $$
 $$
 \frac{\sum_{i=1}^N w_i\cdot p_i}{\sum_{i=1}^N w_i} \geq \frac{w_{i^\star} \cdot p_{i^\star}}{\sum_{i=1}^N w_i} \geq \frac{w_{i^\star} \cdot \min_{i=1}^N p_i}{\sum_{i=1}^N w_i} \geq \min_{i=1}^N p_i
 $$
-where the first inequality follows from the fact that the numerator is a weighed average of non-negative numbers, and the second inequality follows from the choice of $i^\star$. \\
-
 Доказательство теоремы: \\\\
-$
+$$
 \hat{L}_t = \sum_{i=1}^N l(\hat{p}_t, y_t) = \sum_{i=1}^N |\hat{p}_t - y_t| = \sum_{i=1}^N \left|\frac{\sum_{i=1}^N w_i\cdot f_i}{\sum_{i=1}^N w_i} - y_t\right| \geq \\
+$$
+$$
 \geq \sum_{i=1}^N \min_{i=1}^N l(f_{i,t},y_t) = \min_{i=1}^N \sum_{t=1}^T \left|f_{i,t} - y_t\right| = L_{i^\star,t} \\\\
-$
+$$
 Таким образом мы показали, что общие потери алгоритма по крайней мере не меньше общих потерь эксперта.
 
+\section{Решение №2}
+
+Положим: \\\\
+$w_i=\frac{1}{2}*e^{-nl(x,y)}$ - вес эксперта \\
+$L_k = \arg\min_{i=1}^N L_{i,T}$ - лучший эксперт \\
+
+Общие потери алгоритма экспоненциального взвешивания экспертных решений вычисляются как взвешенная сумма потерь каждого эксперта:
+$$
+\hat{L}_t = \sum_{i=1}^N w_i*l(x,y_i) = \sum_{i=1}^N w_i*|x-y_i|
+$$
+Так как l(x, y) удовлетворяет условиям Липшица:
+$$
+|l(x,y_1)-l(x,y_2)| = |x-y_1-x+y_2| = |y_2-y_1|
+$$
+Перепишем общие потери алгоритма в следующем виде:
+$$
+\hat{L}_t = \sum_{i=1}^N w_i*(l(x,y)-L_k+L_k) = L_k*\sum_{i=1}^N w_i+\sum_{i=1}^N w_i*(l(x,y)-L_k)
+$$
+Второе слагаемое можно ограничить снизу:
+$$
+\sum_{i=1}^N w_i*(l(x,y)-L_k) \geq \frac{\sum_{i=1}^N w_i*(l(x,y)-L_k)^2}{\sum_{i=1}^N w_i}
+$$
+где мы использовали вогнутость логарифма, чтобы перейти от модуля разности потерь к разности квадратов потерь. \\\\
+Теперь оценим сумму в знаменателе сверху:
+$$
+\sum_{i=1}^N w_i=\sum_{i=1}^N \frac{1}{2}*e^{-nl(x,y)}
+\leq \sum_{i=1}^N 1/2*e^{-n(l(x,y)-L_k)^2}
+\leq \frac{1}{2}*e^{-n\arg\min_{i=1}^N (l(x,y)-L_k)^2}*N
+$$
 \end{document}
