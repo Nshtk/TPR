@@ -57,6 +57,37 @@ $$
 Таким образом мы показали, что общие потери алгоритма по крайней мере не меньше общих потерь эксперта.
 
 \section{Решение №2}
+Общие потери лучшего эксперта обозначим как:
+
+$$L_{k_*,t}=min_k L_{k,t} \leq \hat{L}_t$$
+
+Для обращения доказательства теоремы необходимо оценить следующую величину:
+$$ln\frac{W_t}{W_0} = ln\sum_{k=1}^Ne^{-\mathnrleg L_k,t} - lnN$$
+
+где $W_t = \sum_{k=1}^Ne^{-L_{k,t}}$ \\\\
+Для оценки снизу используем вид функции потерь:
+$$ln\frac{W_t}{W_{t-1}} = ln\frac{\sum e^{-\mathnrleg L_{k,t}}}{\sum e^{-\mathnrleg L_{k,t-1}}}=$$
+$$=ln\frac{\sum_{k=1}^N e^{-\mathnrleg L_{k,t-1}} * e^{-\mathnrleg * l(f_{k,t}, y_t)}}{\sum e^{-\mathnrleg L_{k,t-1}}}= ln\sum_{k=1}^Np_k(t-1)e^{-\mathnrleg * l(f_{k,t}, y_t)}$$
+Используем вогнутость логарифма:
+$$ln\sum_{k=1}^Np_k(t-1)e^{-\mathnrleg * l(f_{k,t}, y_t)} \geq \sum_{k=1}^Np_k(t-1)*lne^{-\mathnrleg * l(f_{k,t},y_t)}=$$
+$$=-\mathnrleg \sum_{k=1}^Np_k(t-1)l(f_{k,t},y_t) = -\mathnrleg \sum_{k=1}^N p_k(t-1)|f_{k,t} - y_t|$$
+В силу неравенства треугольника:
+$$ -\mathnrleg \sum_{k=1}^N p_k(t-1)|f_{k,t} - y_t|=-\mathnrleg \sum_{k=1}^N|p_k(t-1)f_{k,t} - p_k(t-1)y_t| \geq $$
+$$ \geq -\mathnrleg |\sum_{k=1}^N(p_k(t-1)f_{k,t} - p_k(t-1)y_t)| = -\mathnrleg |\hat{p}_t - y_t| = -\mathnrleg l(\hat{p}_t, y_t) $$
+$$
+ln\frac{W_t}{W_{t-1}} \geq -\mathnrleg l(\hat{p}_t, y_t), t = 1... T
+$$
+$$
+ln\frac{W_t}{W_0} \geq -\mathnrleg \hat{L}_t
+$$
+Теперь оценим данную величину сверху:
+$$ln\frac{W_t}{W_0} \leq ln N*e^{-\mathnrleg L_{k_*,t}} - ln N = ln e^{-\mathnrleg L_{k_*,t}} = -\mathnrleg L_{k_*,t}$$
+В итоге получаем:
+$$\mathnrleg \hat{L_t} \geq \mathnrleg L_{k_*,t} $$
+$$\hat{L_t} \geq L_{k_*,t} $$
+Таким образом мы показали, что общие потери алгоритма по крайней мере
+не меньше общих потерь эксперта.
+\section{Решение №3}
 
 Положим: \\\\
 $w_i=\frac{1}{2}*e^{-nl(x,y_i)}$ - вес эксперта \\
